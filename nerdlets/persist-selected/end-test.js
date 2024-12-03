@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+    AccountStorageMutation,
     BlockText,
     Button,
     Grid,
@@ -33,6 +34,7 @@ class EndTestButton extends React.Component {
 
         this.showModal = this.showModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.endTest = this.endTest.bind(this);
     }
 
     closeModal() {
@@ -41,6 +43,30 @@ class EndTestButton extends React.Component {
 
     showModal() {
         this.setState({ modalHidden: false });
+    }
+
+    endTest() {
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const yyyy = today.getFullYear();
+        const endDate = `${mm}-${dd}-${yyyy}`
+
+        AccountStorageMutation.mutate(
+            {
+                accountId: this.props.accountIds,
+                actionType: AccountStorageMutation.ACTION_TYPE.WRITE_DOCUMENT,
+                collection: "past-tests",
+                documentId: endDate,
+                document: {
+                    versionADescription: this.props.versionADescription,
+                    versionBDescription: this.props.versionBDescription,
+                    winner: this.props.selectedVersion,
+                }
+            }
+        )
+
+        this.closeModal();
     }
 
     render() {
@@ -58,7 +84,7 @@ class EndTestButton extends React.Component {
                 </BlockText>
 
                 <Button onClick={this.closeModal}>No, continue test</Button>
-                <Button type={Button.TYPE.DESTRUCTIVE} onClick={this.closeModal}>Yes, end test</Button>
+                <Button type={Button.TYPE.DESTRUCTIVE} onClick={this.endTest}>Yes, end test</Button>
             </Modal>
         </div>
     }
@@ -93,7 +119,14 @@ export default class EndTestSection extends React.Component {
                 />
             </GridItem>
             <GridItem columnStart={7} columnEnd={8}>
-                <EndTestButton selectedVersion={this.state.selectedVersion}>End test</EndTestButton>
+                <EndTestButton
+                    accountIds={this.props.accountIds}
+                    selectedVersion={this.state.selectedVersion}
+                    versionADescription={this.props.versionADescription}
+                    versionBDescription={this.props.versionBDescription}
+                >
+                    End test
+                </EndTestButton>
             </GridItem>
         </Grid>
     }

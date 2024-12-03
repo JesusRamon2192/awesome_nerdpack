@@ -1,5 +1,10 @@
 import React from 'react';
-import { TableChart, HeadingText } from 'nr1';
+import {
+    AccountStorageQuery,
+    HeadingText,
+    Spinner,
+    TableChart,
+} from 'nr1';
 
 export default class PastTests extends React.Component {
     render() {
@@ -9,27 +14,38 @@ export default class PastTests extends React.Component {
                 name: 'Past tests',
                 columns: ['endDate', 'versionADescription', 'versionBDescription', 'winner'],
             },
-            data: [
-                {
-                    "endDate": "12-15-2020",
-                    "versionADescription": "The homepage's CTA button was green.",
-                    "versionBDescription": "The homepage's CTA button was blue.",
-                    "winner": "A"
-                },
-                {
-                    "endDate": "09-06-2019",
-                    "versionADescription": "The 'Deals' page showed sales in a carousel.",
-                    "versionBDescription": "The 'Deals' page showed sales in a grid.",
-                    "winner": "B"
-                }
-            ],
+            data: [],
         }
 
         return <div>
-        <HeadingText className="chartHeader">
-            Past tests
-        </HeadingText>
-        <TableChart data={[historicalData]} fullWidth />
-    </div>
+            <HeadingText className="chartHeader">
+                Past tests
+            </HeadingText>
+            <AccountStorageQuery accountId={this.props.accountIds} collection="past-tests">
+                {({ loading, error, data }) => {
+                    if (loading) {
+                        return <Spinner />;
+                    }
+                    if (error) {
+                        console.debug(error);
+                        return 'There was an error fetching your data.';
+                    }
+                    data.forEach(
+                        function (currentValue, index) {
+                            historicalData.data.push({
+                                endDate: currentValue.id,
+                                versionADescription: currentValue.document.versionADescription,
+                                versionBDescription: currentValue.document.versionBDescription,
+                                winner: currentValue.document.winner,
+                            })
+                        }, data
+                    )
+                    console.log(data);
+                    
+                    
+                    return <TableChart data={[historicalData]} fullWidth />
+                }}
+            </AccountStorageQuery>
+        </div>
     }
 }
