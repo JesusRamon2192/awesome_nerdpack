@@ -67,6 +67,7 @@ class EndTestButton extends React.Component {
         )
 
         this.closeModal();
+        
     }
 
     render() {

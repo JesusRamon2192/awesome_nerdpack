@@ -46,7 +46,7 @@ export default class VersionTotals extends React.Component {
     }
 
     render() {
-        console.log("Datos enviados a TableChart:", this.state.tableData);
+        //console.log("Datos enviados a TableChart:", this.state.tableData);
 
         if (!this.state.dataLoaded) {
             return <div>Cargando datos...</div>;

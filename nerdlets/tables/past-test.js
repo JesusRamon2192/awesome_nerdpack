@@ -40,8 +40,7 @@ export default class PastTests extends React.Component {
                             })
                         }, data
                     )
-                    console.log(data);
-                    
+                    console.log(historicalData.data);
                     
                     return <TableChart data={[historicalData]} fullWidth />
                 }}
