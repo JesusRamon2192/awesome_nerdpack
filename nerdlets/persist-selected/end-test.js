@@ -54,7 +54,7 @@ class EndTestButton extends React.Component {
 
         AccountStorageMutation.mutate(
             {
-                accountId: this.props.accountIds,
+                accountId: this.props.accountId,
                 actionType: AccountStorageMutation.ACTION_TYPE.WRITE_DOCUMENT,
                 collection: "past-tests",
                 documentId: endDate,

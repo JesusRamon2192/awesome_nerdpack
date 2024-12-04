@@ -21,7 +21,7 @@ export default class PastTests extends React.Component {
             <HeadingText className="chartHeader">
                 Past tests
             </HeadingText>
-            <AccountStorageQuery accountId={this.props.accountIds} collection="past-tests">
+            <AccountStorageQuery accountId={this.props.accountId} collection="past-tests">
                 {({ loading, error, data }) => {
                     if (loading) {
                         return <Spinner />;
@@ -40,7 +40,8 @@ export default class PastTests extends React.Component {
                             })
                         }, data
                     )
-                    console.log(historicalData.data);
+                    //console.log(historicalData.data);
+                    //console.log(historicalData);
                     
                     return <TableChart data={[historicalData]} fullWidth />
                 }}

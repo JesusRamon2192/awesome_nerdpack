@@ -4,22 +4,49 @@ import { PieChart,HeadingText, NrqlQuery } from 'nr1';
 const ACCOUNT_ID = 2132798
 
 export default class TotalCancellations extends React.Component {
+    constructor() {
+        super(...arguments);
+
+        this.state = {
+            lastToken: null
+        }
+    }
+
+    componentDidUpdate() {
+        if (this.props.token && this.props.token != this.state.lastToken) {
+            console.log(`requesting data with api token ${this.props.token}`)
+            this.setState({lastToken: this.props.token})
+        }
+    }
+
     render() {
+        const cancellationsA = {
+            metadata: {
+                id: 'cancellations-A',
+                name: 'Version A',
+                viz: 'main',
+                color: 'blue',
+            },
+            data: [
+                { y: 118 },
+            ],
+        }
+        const cancellationsB = {
+            metadata: {
+                id: 'cancellations-B',
+                name: 'Version B',
+                viz: 'main',
+                color: 'green',
+            },
+            data: [
+                { y: 400 },
+            ],
+        }
         return <div>
-        <HeadingText className="chartHeader">
-            Total cancellations per version
-        </HeadingText>
-        <NrqlQuery
-                accountIds={[ACCOUNT_ID]}
-                query="SELECT count(*) FROM pageView FACET page_version"
-                pollInterval={60000}
-            >
-                {
-                    ({ data }) => {
-                        return <PieChart data={data} fullWidth />
-                    }
-                }
-        </NrqlQuery>
-    </div>
+            <HeadingText className="chartHeader">
+                Total cancellations per version
+            </HeadingText>
+            <PieChart data={[cancellationsA, cancellationsB]} fullWidth />
+        </div>
     }
 }
