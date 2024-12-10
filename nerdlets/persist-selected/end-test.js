@@ -121,7 +121,7 @@ export default class EndTestSection extends React.Component {
             </GridItem>
             <GridItem columnStart={7} columnEnd={8}>
                 <EndTestButton
-                    accountIds={this.props.accountIds}
+                    accountId={this.props.accountId}
                     selectedVersion={this.state.selectedVersion}
                     versionADescription={this.props.versionADescription}
                     versionBDescription={this.props.versionBDescription}
