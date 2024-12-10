@@ -1,26 +1,39 @@
 import React from 'react';
-import { LineChart, HeadingText, NrqlQuery } from 'nr1';
+import {
+    HeadingText,
+    LineChart,
+    NrqlQuery,
+    PlatformStateContext,
+} from 'nr1';
 
 const ACCOUNT_ID = 2132798
 
 export default class NewsletterSignups extends React.Component {
     render() {
         return <div>
-        <HeadingText className="chartHeader">
-            Newsletter subscriptions per version
-        </HeadingText>
+            <HeadingText className="chartHeader">
+                Newsletter subscriptions per version
+            </HeadingText>
 
-        <NrqlQuery
-                accountIds={[ACCOUNT_ID]}
-                query="SELECT count(*) FROM subscription FACET page_version SINCE 30 MINUTES AGO TIMESERIES"
-                pollInterval={60000}
-        >
+            <PlatformStateContext.Consumer>
                 {
-                    ({ data }) => {
-                        return <LineChart data={data} fullWidth />;
+                    (platformState) => {
+                        //console.log(platformState.timeRange);
+                        return <NrqlQuery
+                            accountIds={[ACCOUNT_ID]}
+                            query="SELECT count(*) FROM subscription FACET page_version SINCE 30 MINUTES AGO TIMESERIES"
+                            timeRange={platformState.timeRange}
+                            pollInterval={60000}
+                        >
+                            {
+                                ({ data }) => {
+                                    return <LineChart data={data} fullWidth />;
+                                }
+                            }
+                        </NrqlQuery>
                     }
                 }
-        </NrqlQuery>
-    </div>
+            </PlatformStateContext.Consumer>
+        </div>
     }
 }
